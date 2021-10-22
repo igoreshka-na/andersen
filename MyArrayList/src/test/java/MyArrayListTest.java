@@ -1,6 +1,7 @@
 import org.junit.Test;
 
 import java.math.BigInteger;
+import java.util.Comparator;
 
 import static org.junit.Assert.*;
 
@@ -131,7 +132,12 @@ public class MyArrayListTest {
         for (int i = 10; i > 0; i--) {
             list.add(i);
         }
-        list.sort();
+        list.sort(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1.compareTo(o2);
+            }
+        });
         assertEquals(Integer.valueOf(1), list.get(0));
     }
 

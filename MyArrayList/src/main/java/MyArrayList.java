@@ -1,8 +1,8 @@
 import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Класс MyArrayList - саморасширяющийся массив с элементами T (generics).
- * Имеет возможность создания листа только с возможность сравнения элементов (используемые интерфейс Comparable).
  * Имеет три конструктора: без параметров, со значением размера и с добавлением уже созданной коллекции.
  * Каждый MyArrayList имеет размер свободных ячеек (default 10 ячеек), значение "true/false" первого добавления в список, индекс последнего элемента и массив объектов T.
  * Имплементирует интерфейс MyList с элементами T (generics), и реализует два его метода - sort() и quickSort().
@@ -15,9 +15,9 @@ import java.util.Arrays;
  * Метод get() и remove(T object) работают за время необходимого количества элементов в массиве O(n).
  * Метод sort() и quickSort() работают за логарифмическое время O(log n).
  * @author Igor Novikov
- * @param <T> любой класс наследуемый от Object, где элементы можно сравнить друг с другом (используют Comparable).
+ * @param <T> любой класс Object.
  */
-public class MyArrayList<T extends Comparable<T>> implements MyList<T> {
+public class MyArrayList<T> implements MyList<T> {
     /**
      * Без указания размера массива, его размер равен 10-ти.
      */
@@ -44,15 +44,15 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T> {
      * Если параметр больше нуля - устанавливает заданный размер.
      * При параметре равном нулю - создется пустой массив (размер равен нулю).
      * При параметре равном меньше нуля выдает исключение IllegalArgumentException.
-     * Приводит массив Comparable к заданному типу T.
+     * Приводит массив Object к заданному типу T.
      * @param initialSize устнавливаемый размер массива.
      */
     public MyArrayList(int initialSize) {
         if (initialSize > 0) {
             setSize(initialSize);
-            elements = (T[]) new Comparable[size];
+            elements = (T[]) new Object[size];
         } else if (initialSize == 0) {
-            elements = (T[]) new Comparable[] {};
+            elements = (T[]) new Object[] {};
             setSize(0);
         } else throw new IllegalArgumentException("Illegal size: " + initialSize);
     }
@@ -62,7 +62,7 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T> {
      */
     public MyArrayList() {
         setSize(DEFAULT_CAPACITY);
-        elements = (T[]) new Comparable[size];
+        elements = (T[]) new Object[size];
     }
 
     /**
@@ -223,8 +223,8 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T> {
      * Метод сортировки массива, где используется метод "быстрой сортировки".
      */
     @Override
-    public void sort() {
-        quickSort(elements, 0, lastObjectIndex);
+    public void sort(Comparator<? super T> comparator) {
+        quickSort(elements, 0, lastObjectIndex, comparator);
     }
 
     /**
@@ -235,17 +235,17 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T> {
      * @param <T> тип данных сортировки.
      */
     @Override
-    public <T extends Comparable<T>> void quickSort(T[] array, int firstIndex, int lastIndex) {
+    public <T> void quickSort(T[] array, int firstIndex, int lastIndex, Comparator<? super T> comparator) {
         int left = firstIndex;
         int right = lastIndex;
         T pivot = array[(left + right) / 2];
 
         do {
-            while(array[left].compareTo(pivot) < 0) left++;
-            while(array[right].compareTo(pivot) > 0) right--;
+            while(comparator.compare(array[left], pivot) < 0) left++;
+            while(comparator.compare(array[right], pivot) > 0) right--;
 
             if (left <= right) {
-                if(array[left].compareTo(array[right]) > 0) {
+                if(comparator.compare(array[left], array[right]) > 0) {
                     T temp = array[left];
                     array[left] = array[right];
                     array[right] = temp;
@@ -256,10 +256,10 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T> {
         } while(left <= right);
 
         if (left < lastIndex) {
-            quickSort(array, left, lastIndex);
+            quickSort(array, left, lastIndex, comparator);
         }
         if (firstIndex < right) {
-            quickSort(array, firstIndex, right);
+            quickSort(array, firstIndex, right, comparator);
         }
     }
 
