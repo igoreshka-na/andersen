@@ -44,6 +44,20 @@ public class MyArrayListTest {
         assertEquals(BigInteger.class, list3.get(0).getClass());
     }
 
+    @Test
+    public void testTrimToSize() {
+        MyArrayList<String> list = new MyArrayList<>(10);
+        list.add("1");
+        assertEquals(10, list.size());
+
+        list.trimToSize();
+        assertEquals(1, list.size());
+
+        list.add("2");
+        list.trimToSize();
+        assertEquals(2, list.size());
+    }
+
     @Test(expected = IndexOutOfBoundsException.class)
     public void testIndexOutOfBoundsException() {
         MyArrayList<Integer> list = new MyArrayList<>();

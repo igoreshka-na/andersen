@@ -49,11 +49,11 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T> {
      */
     public MyArrayList(int initialSize) {
         if (initialSize > 0) {
-            size = initialSize;
+            setSize(initialSize);
             elements = (T[]) new Comparable[size];
         } else if (initialSize == 0) {
             elements = (T[]) new Comparable[] {};
-            size = 0;
+            setSize(0);
         } else throw new IllegalArgumentException("Illegal size: " + initialSize);
     }
 
@@ -61,7 +61,7 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T> {
      * Пустой конструктор со стандартным значением размера.
      */
     public MyArrayList() {
-        size = DEFAULT_CAPACITY;
+        setSize(DEFAULT_CAPACITY);
         elements = (T[]) new Comparable[size];
     }
 
@@ -78,7 +78,7 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T> {
             newCapacity = 10;
         }
         elements = Arrays.copyOf(elements, newCapacity);
-        size = newCapacity;
+        setSize(newCapacity);
     }
 
     /**
@@ -101,6 +101,14 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T> {
     }
 
     /**
+     * Закрытый метод установки размера массива.
+     * @param newSize новый размер массива.
+     */
+    private void setSize(int newSize) {
+        size = newSize;
+    }
+
+    /**
      * Метод получения размера массива.
      * @return значение size.
      */
@@ -111,6 +119,18 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T> {
      * @return значение lastObjectIndex.
      */
     public int getLastIndex() { return lastObjectIndex; }
+
+    /**
+     * Метод сокращения размера массива до размера количества элементов находящихся в нём.
+     */
+    public void trimToSize() {
+        System.arraycopy(elements, 0, elements, 0, lastObjectIndex);
+        if (lastObjectIndex == 0) {
+            setSize(1);
+        } else {
+            setSize(lastObjectIndex + 1);
+        }
+    }
 
     /**
      * Метод добавления элемента в массив.
