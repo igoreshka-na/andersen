@@ -1,5 +1,4 @@
 import java.util.Arrays;
-import java.util.Collection;
 
 /**
  * Класс MyArrayList - саморасширяющийся массив с элементами T (generics).
@@ -64,20 +63,6 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T> {
     public MyArrayList() {
         size = DEFAULT_CAPACITY;
         elements = (T[]) new Comparable[size];
-    }
-
-    /**
-     * Создает эллемент класса уже имеющейся коллекции, имеющую возможность сравнения объектов (использует интерфейс Comparable).
-     * Создает размер по количеству элементов в заданной коллекции.
-     * Назначает последний индекс объекта в массиве по длине элементов.
-     * Первое добавление элемента не требуется.
-     * @param collection заданная коллекция, имплементирующая интерфейс Comparable.
-     */
-    public MyArrayList(Collection<? extends Comparable<T>> collection) {
-        elements = (T[]) collection.toArray();
-        size = elements.length;
-        lastObjectIndex = elements.length;
-        firstAdd = false;
     }
 
     /**
@@ -155,28 +140,21 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T> {
      * Далее идёт проверка на возможность добавление элемента по заданному индексу.
      * Если индекс в диапазоне пустых элементов (больше последнего элемента и меньше размера массива) - то объект добавляется в конец массива.
      * Если индекс больше размера массива - то выдает исключение IndexOutOfBoundsException.
-     * Если индекс в диапозоне элементов (от 0 до последнего элемента) - то идёт копирование второй части массива со смещением на один элемент и добавление элемента по указанному индексу.
+     * Если индекс в диапозоне элементов (от 0 до последнего элемента) - то идёт расширение массива, копирование второй части массива со смещением на один элемент и добавление элемента по указанному индексу.
      * @param index индекс на добавление объекта в указанный индекс массива.
      * @param object объект класса T на добавление.
      */
     public void add(int index, T object) {
-        if (!ensureCapacity()) {
-            capacityExpansion();
-            System.arraycopy(elements, index, elements, index + 1, lastObjectIndex - 1);
-            elements[index] = object;
-            lastObjectIndex++;
+        if (index > lastObjectIndex && index <= size) {
+            add(object);
+        } else if (index > size || 0 > index) {
+            throw new IndexOutOfBoundsException(
+                    "Index: " + index + ", Size last index: " + lastObjectIndex);
         } else {
-            if (index > lastObjectIndex && index <= size) {
-                lastObjectIndex++;
-                elements[lastObjectIndex] = object;
-            } else if (index > size) {
-                throw new IndexOutOfBoundsException(
-                        "Index: " + index + ", Size last index: " + lastObjectIndex);
-            } else {
-                System.arraycopy(elements, index, elements, index + 1, lastObjectIndex - 2);
+                capacityExpansion();
+                System.arraycopy(elements, index - 1, elements, index, lastObjectIndex - 1);
                 elements[index] = object;
                 lastObjectIndex++;
-            }
         }
     }
 
@@ -271,8 +249,15 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T> {
      */
     @Override
     public String toString() {
+        StringBuilder exit = new StringBuilder();
+        exit.append("[");
+        for (int i = 0; i <= lastObjectIndex; i++) {
+            exit.append(elements[i]);
+        }
+        exit.append("]");
         return "MyArrayList{" +
-                "elements=" + Arrays.toString(elements) +
+                "elements=" +
+                exit +
                 '}';
     }
 }
