@@ -1,64 +1,56 @@
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 
 /**
- * Класс MyArrayList - саморасширяющийся массив с элементами T (generics).
- * Имеет три конструктора: без параметров, со значением размера и с добавлением уже созданной коллекции.
- * Каждый MyArrayList имеет размер свободных ячеек (default 10 ячеек), значение "true/false" первого добавления в список, индекс последнего элемента и массив объектов T.
- * Имплементирует интерфейс MyList с элементами T (generics), и реализует два его метода - sort() и quickSort().
- * Имеет скрытые методы проверки места в массиве - ensureCapacity(), метод саморасширения - capacityExpansion(), метод проверки индекса в диапазоне элементов - rangeCheckElement(int index).
- * Метод size() возвращает размер всего массива, метод getLastIndex() возвращает последний индекс элемента в массиве.
- * Два метода add(): первый - с параметром объекта, который надо добавить (T object); второй - с параметрам указания индекса, в который надо добавить, и параметром самого добавляемого объекта (int index, T object).
- * Метод получения элемента в массиве с указанием индекса - get(int index).
- * Два метода удаления элементов из массива: с указанием конкретного объекта remove(T object), и с указанием индекса remove(int index).
- * Все скрытые методы, а также size(), getLastIndex(), remove(int index) и оба метода add() работают за константное время O(1).
- * Метод get() и remove(T object) работают за время необходимого количества элементов в массиве O(n).
- * Метод sort() и quickSort() работают за логарифмическое время O(log n).
+ * The MyArrayList class is a self-expanding array with T elements (generics).
+ *
+ * All hidden methods as well as size(), getLastIndex(), remove(int index) and both add() methods work for a constant O(1) time.
+ * The get() and remove(T object) methods work for the required number of elements in the array O(n) time.
+ * The sort() and quickSort() methods work for logarithmic time O(n log n).
+ *
  * @author Igor Novikov
- * @param <T> любой класс Object.
+ * @param <T> any Object class.
  */
 public class MyArrayList<T> implements MyList<T> {
     /**
-     * Без указания размера массива, его размер равен 10-ти.
+     * Without specifying an array size, its size is 10.
      */
     private static final int DEFAULT_CAPACITY = 10;
     /**
-     * Количество всех ячеек в массиве.
+     * The number of all cells in the array.
      */
     private int size;
     /**
-     * Значение переменной на первое добавление (в начале всегда true).
+     * The value of the variable for the first addition (always true at the beginning).
      */
     private boolean firstAdd = true;
     /**
-     * Переменная последнего индекса объекта в массиве (в начале всегда 0).
+     * Variable of the last object index in the array (always 0 at the beginning).
      */
     private int lastObjectIndex = 0;
     /**
-     * Массив эллементов T.
+     * An array of elements T.
      */
     private T[] elements;
 
     /**
-     * Конструктор класса с установкой изначального размера.
-     * Если параметр больше нуля - устанавливает заданный размер.
-     * При параметре равном нулю - создется пустой массив (размер равен нулю).
-     * При параметре равном меньше нуля выдает исключение IllegalArgumentException.
-     * Приводит массив Object к заданному типу T.
-     * @param initialSize устнавливаемый размер массива.
+     * Class constructor with initial size setting.
+     *
+     * @param initialSize the size of the array to be set.
      */
     public MyArrayList(int initialSize) {
         if (initialSize > 0) {
             setSize(initialSize);
             elements = (T[]) new Object[size];
         } else if (initialSize == 0) {
-            elements = (T[]) new Object[] {};
+            elements = (T[]) new Object[]{};
             setSize(0);
         } else throw new IllegalArgumentException("Illegal size: " + initialSize);
     }
 
     /**
-     * Пустой конструктор со стандартным значением размера.
+     * Empty constructor with a standard size value.
      */
     public MyArrayList() {
         setSize(DEFAULT_CAPACITY);
@@ -66,9 +58,19 @@ public class MyArrayList<T> implements MyList<T> {
     }
 
     /**
-     * Метод расширения массива.
-     * Если массив пустой - то задается значение нового размера 10.
-     * Если массив заполнен - рассчитывается новый размер массива и копируется в уже имеющийся, но с новым размером и назначается новый размер по рассчету.
+     * Constructor with bringing another collection to class T.
+     *
+     * @param collection other collection.
+     */
+    public MyArrayList(Collection<? extends T> collection) {
+        Object[] a = collection.toArray();
+        size = collection.size();
+        lastObjectIndex = size - 1;
+        elements = (T[]) Arrays.copyOf(a, size, Object[].class);
+    }
+
+    /**
+     * Array expansion method.
      */
     private void capacityExpansion() {
         int newCapacity;
@@ -82,18 +84,18 @@ public class MyArrayList<T> implements MyList<T> {
     }
 
     /**
-     * Проверка массива на необходимость расширения.
-     * Если последний индекс массива равен размеру массива, то необходимо расширение.
-     * @return значение true при необходимости расширения и false при свободном месте в массиве.
+     * Check the array to see if it needs to be expanded.
+     *
+     * @return value is true if the array needs to be expanded, and false if there is free space in the array.
      */
     private boolean ensureCapacity() {
         return lastObjectIndex != size;
     }
 
     /**
-     * Проверка индекса на возможность получения, добавления и удаления элемента по указанному индексу.
-     * Если индекс меньше 0 и больше последнего индекса элемента в массиве, то выдает исключение IndexOutOfBoundsException.
-     * @param index нужный индекс для метода.
+     * Check the index for the possibility to get, add and delete an element by the specified index.
+     *
+     * @param index required index for the method.
      */
     private void rangeCheckElement(int index) {
         if (index < 0 || lastObjectIndex < index)
@@ -101,27 +103,34 @@ public class MyArrayList<T> implements MyList<T> {
     }
 
     /**
-     * Закрытый метод установки размера массива.
-     * @param newSize новый размер массива.
+     * A closed method of setting the size of the array.
+     *
+     * @param newSize new size of the array.
      */
     private void setSize(int newSize) {
         size = newSize;
     }
 
     /**
-     * Метод получения размера массива.
-     * @return значение size.
+     * The method of obtaining the size of the array.
+     *
+     * @return size value.
      */
-    public int size() { return size; }
+    public int size() {
+        return size;
+    }
 
     /**
-     * Метод получения последнего индекса с объектом в массиве.
-     * @return значение lastObjectIndex.
+     * A method to get the last index with an object in the array.
+     *
+     * @return value lastObjectIndex.
      */
-    public int getLastIndex() { return lastObjectIndex; }
+    public int getLastIndex() {
+        return lastObjectIndex;
+    }
 
     /**
-     * Метод сокращения размера массива до размера количества элементов находящихся в нём.
+     * A method of reducing the size of an array to the number of elements it contains.
      */
     public void trimToSize() {
         System.arraycopy(elements, 0, elements, 0, lastObjectIndex);
@@ -133,10 +142,9 @@ public class MyArrayList<T> implements MyList<T> {
     }
 
     /**
-     * Метод добавления элемента в массив.
-     * В начале идёт проверка на первое добавление. Если это первое добавление - то сначала расширяется массив, потом добавляется элемент, в конце - изменяется значение firstAdd.
-     * Если это не первое добавление, то далее: увеличивается последний индекс, идёт проверка на заполненность массива, и добавляется элемент на последний индекс.
-     * @param element указанный элемент на добавление.
+     * The method of adding an element to an array.
+     *
+     * @param element specified element to add.
      */
     public void add(T element) {
         if (firstAdd) {
@@ -155,14 +163,9 @@ public class MyArrayList<T> implements MyList<T> {
     }
 
     /**
-     * Добавление элемента в массив с указанным индексом, с возможностью добавления элемента в середину массива, а при указании размера массива - возможность добавить элемент в конец массива.
-     * Первое - проверяется массив на возможность добавление элемента и, при необходимости, его расширения.
-     * Далее идёт проверка на возможность добавление элемента по заданному индексу.
-     * Если индекс в диапазоне пустых элементов (больше последнего элемента и меньше размера массива) - то объект добавляется в конец массива.
-     * Если индекс больше размера массива - то выдает исключение IndexOutOfBoundsException.
-     * Если индекс в диапозоне элементов (от 0 до последнего элемента) - то идёт расширение массива, копирование второй части массива со смещением на один элемент и добавление элемента по указанному индексу.
-     * @param index индекс на добавление объекта в указанный индекс массива.
-     * @param object объект класса T на добавление.
+     * Adding an element to the array with the specified index, with the possibility to add an element to the middle of the array, and if you specify an array size - the possibility to add an element to the end of the array.
+     *
+     * @param object object of class T to add.
      */
     public void add(int index, T object) {
         if (index > lastObjectIndex && index <= size) {
@@ -171,18 +174,18 @@ public class MyArrayList<T> implements MyList<T> {
             throw new IndexOutOfBoundsException(
                     "Index: " + index + ", Size last index: " + lastObjectIndex);
         } else {
-                capacityExpansion();
-                System.arraycopy(elements, index - 1, elements, index, lastObjectIndex - 1);
-                elements[index] = object;
-                lastObjectIndex++;
+            capacityExpansion();
+            System.arraycopy(elements, index - 1, elements, index, lastObjectIndex - 1);
+            elements[index] = object;
+            lastObjectIndex++;
         }
     }
 
     /**
-     * Получение элемента массива по указанному индексу.
-     * В начале идёт проверка на возможность получения элемента по индексу, и в случае возможности - возвращает объект.
-     * @param index необходимый индекс для получения элемента.
-     * @return объект по указанному индексу.
+     * Getting an element of an array by the specified index.
+     *
+     * @param index necessary index for getting an element.
+     * @return object by the specified index.
      */
     public T get(int index) {
         rangeCheckElement(index);
@@ -190,11 +193,9 @@ public class MyArrayList<T> implements MyList<T> {
     }
 
     /**
-     * Удаление объекта из массива по указанному индексу.
-     * В начале идёт проверка на возможность удаления элемента по индексу.
-     * Далее массив копируется с вырезанием нужного элемента в конец массива, где его значению приравнивается null.
-     * В конце уменьшается индекс последнего элемента.
-     * @param index необходимый индекс на удаление элемента из массива.
+     * Deleting an object from an array by the specified index.
+     *
+     * @param index required index to remove an element from the array.
      */
     public void remove(int index) {
         rangeCheckElement(index);
@@ -207,9 +208,9 @@ public class MyArrayList<T> implements MyList<T> {
     }
 
     /**
-     * Удаление элемента по указанию самого объекта.
-     * Идёт перебор элементов, где находится необходимый. Далее идёт процесс удаления.
-     * @param object необходимый объект на удаление из массива.
+     * Deleting an element by specifying the object itself.
+     *
+     * @param object necessary object to remove from the array.
      */
     public void remove(T object) {
         for (int i = 0; i <= lastObjectIndex; i++) {
@@ -220,7 +221,7 @@ public class MyArrayList<T> implements MyList<T> {
     }
 
     /**
-     * Метод сортировки массива, где используется метод "быстрой сортировки".
+     * Array sorting method, where the "quick sort" method is used.
      */
     @Override
     public void sort(Comparator<? super T> comparator) {
@@ -228,11 +229,12 @@ public class MyArrayList<T> implements MyList<T> {
     }
 
     /**
-     * Метод быстрой сортировки массива, имеющего возможность сравнивать элементы.
-     * @param array необходимый массив для сортировки.
-     * @param firstIndex первый индекс массива.
-     * @param lastIndex последний индекс массива.
-     * @param <T> тип данных сортировки.
+     * A quick sort method for an array that has the ability to compare elements.
+     *
+     * @param array required array for sorting.
+     * @param firstIndex first index of the array.
+     * @param lastIndex last index of array.
+     * @param <T> sort data type.
      */
     @Override
     public <T> void quickSort(T[] array, int firstIndex, int lastIndex, Comparator<? super T> comparator) {
@@ -241,11 +243,11 @@ public class MyArrayList<T> implements MyList<T> {
         T pivot = array[(left + right) / 2];
 
         do {
-            while(comparator.compare(array[left], pivot) < 0) left++;
-            while(comparator.compare(array[right], pivot) > 0) right--;
+            while (comparator.compare(array[left], pivot) < 0) left++;
+            while (comparator.compare(array[right], pivot) > 0) right--;
 
             if (left <= right) {
-                if(comparator.compare(array[left], array[right]) > 0) {
+                if (comparator.compare(array[left], array[right]) > 0) {
                     T temp = array[left];
                     array[left] = array[right];
                     array[right] = temp;
@@ -253,7 +255,7 @@ public class MyArrayList<T> implements MyList<T> {
                 left++;
                 right--;
             }
-        } while(left <= right);
+        } while (left <= right);
 
         if (left < lastIndex) {
             quickSort(array, left, lastIndex, comparator);
@@ -264,20 +266,14 @@ public class MyArrayList<T> implements MyList<T> {
     }
 
     /**
-     * Метод возвращающий строку со всеми элементами.
-     * @return объект класса String со всеми элементами.
+     * A method that returns a string with all elements.
+     *
+     * @return object of class String with all elements.
      */
     @Override
     public String toString() {
-        StringBuilder exit = new StringBuilder();
-        exit.append("[");
-        for (int i = 0; i <= lastObjectIndex; i++) {
-            exit.append(elements[i]);
-        }
-        exit.append("]");
         return "MyArrayList{" +
-                "elements=" +
-                exit +
+                "elements=" + Arrays.toString(elements) +
                 '}';
     }
 }

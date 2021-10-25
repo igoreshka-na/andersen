@@ -1,22 +1,22 @@
 import java.util.Comparator;
 
 /**
- * Интерфейс MyList создан для возможности реализации имплементирующий классов методов sort() и quickSort().
+ * The MyList interface was created to allow implementation of the sort() and quickSort() methods.
  * @author Igor Novikov
- * @param <T> любой класс наследуемый от Object.
+ * @param <T> any class inherited from Object.
  */
 public interface MyList<T> {
     /**
-     * Метод сортировки коллекции.
+     * Method of sorting the collection using the Сomparator.
      */
     void sort(Comparator<? super T> comparator);
 
     /**
-     * Метод быстрой сортировки массива по первому и последнему индексу массива.
-     * @param array массив элементов T.
-     * @param firstIndex первый индекс массива.
-     * @param lastIndex последний индекс массива.
-     * @param <T> любой класс Object.
+     * Method of quick sorting of array by first and last array index.
+     * @param array array of elements T.
+     * @param firstIndex first index of array.
+     * @param lastIndex last index of array.
+     * @param <T> any Object class.
      */
     <T> void quickSort(T[] array, int firstIndex, int lastIndex, Comparator<? super T> comparator);
 }

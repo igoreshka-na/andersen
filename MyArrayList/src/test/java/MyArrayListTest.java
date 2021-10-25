@@ -1,6 +1,7 @@
 import org.junit.Test;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Comparator;
 
 import static org.junit.Assert.*;
@@ -8,7 +9,7 @@ import static org.junit.Assert.*;
 public class MyArrayListTest {
 
     @Test
-    public void testConstructorsAll() {
+    public void testConstructorsFirstAndSecond() {
         MyArrayList<Integer> list1 = new MyArrayList<>(10);
         MyArrayList<Integer> list2 = new MyArrayList<>(0);
         MyArrayList<Integer> list3 = new MyArrayList<>();
@@ -16,6 +17,15 @@ public class MyArrayListTest {
         assertEquals(10, list1.size());
         assertEquals(0, list2.size());
         assertEquals(10, list3.size());
+    }
+
+    @Test
+    public void testConstructorsThree() {
+        ArrayList<Integer> list1 = new ArrayList<>();
+        list1.add(1);
+        MyArrayList<Integer> list2 = new MyArrayList<>(list1);
+
+        assertEquals(Integer.class, list2.get(0).getClass());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -146,6 +156,6 @@ public class MyArrayListTest {
         MyArrayList<Integer> list = new MyArrayList<>();
         list.add(1);
 
-        assertEquals("MyArrayList{elements=[1]}", list.toString());
+        assertEquals("MyArrayList{elements=[1, null, null, null, null, null, null, null, null, null]}", list.toString());
     }
 }
