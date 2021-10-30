@@ -9,6 +9,10 @@ public class Company {
     protected String city;
     protected String creator;
 
+    public Company(int id) {
+        this.id = id;
+    }
+
     public Company(int id, String name, String city, String creator) {
         this.id = id;
         this.name = name;
