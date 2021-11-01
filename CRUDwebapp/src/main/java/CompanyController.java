@@ -12,8 +12,13 @@ import java.util.logging.Logger;
 
 @WebServlet("/")
 public class CompanyController extends HttpServlet {
-    private CRUDcompany crudCompany = new CRUDcompany();
+    private static final long serialVersionUID = 1L;
+    private CRUDcompany crudCompany;
     private static final Logger LOGGER = Logger.getLogger(CompanyController.class.getName());
+
+    public void init() {
+        crudCompany = new CRUDcompany();
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -38,11 +43,14 @@ public class CompanyController extends HttpServlet {
                 case "/edit":
                     showEditForm(req, resp);
                     break;
+                case "/update":
+                    updatePlayers(req, resp);
+                    break;
                 default:
                     listCompany(req, resp);
                     break;
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             //For simplicity just Log the exceptions
             LOGGER.log(Level.SEVERE, "SQL ERROR", e);
         }
@@ -52,9 +60,20 @@ public class CompanyController extends HttpServlet {
             throws SQLException, IOException, ServletException {
         String id = req.getParameter("id");
         Company existingCompany = crudCompany.find(id);
-        RequestDispatcher dispatcher = req.getRequestDispatcher("WEB-INF/jsp/CompanyForm.jsp");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("WEB-INF/jsp/company-form.jsp");
         req.setAttribute("company", existingCompany);
         dispatcher.forward(req, resp);
+    }
+
+    private void updatePlayers(HttpServletRequest req, HttpServletResponse resp) throws SQLException, IOException, ServletException {
+        int id = Integer.parseInt(req.getParameter("id"));
+        String name = req.getParameter("name");
+        String city = req.getParameter("city");
+        String creator = req.getParameter("creator");
+
+        Company company = new Company(id, name, city, creator);
+        crudCompany.update(company);
+        resp.sendRedirect("list");
     }
 
     private void deleteStuff(HttpServletRequest req, HttpServletResponse resp)
@@ -77,9 +96,9 @@ public class CompanyController extends HttpServlet {
         resp.sendRedirect("list");
     }
 
-    private void showNewForm (HttpServletRequest req, HttpServletResponse resp)
+    private void showNewForm(HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, IOException, ServletException {
-        RequestDispatcher dispatcher = req.getRequestDispatcher("WEB-INF/jsp/CompanyForm.jsp");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("WEB-INF/jsp/company-form.jsp");
         dispatcher.forward(req, resp);
     }
 
@@ -87,7 +106,7 @@ public class CompanyController extends HttpServlet {
             throws SQLException, IOException, ServletException {
         List<Company> listCompany = crudCompany.findAll();
         req.setAttribute("listCompany", listCompany);
-        RequestDispatcher dispatcher = req.getRequestDispatcher("WEB-INF/jsp/CompanyList.jsp");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("WEB-INF/jsp/company-list.jsp");
         dispatcher.forward(req, resp);
     }
 }

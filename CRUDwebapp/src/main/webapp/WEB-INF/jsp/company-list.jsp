@@ -1,11 +1,12 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"%>
+         pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 
 <head>
     <title>Company Management Application</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
 <body>
@@ -13,12 +14,12 @@
 <header>
     <nav class="navbar navbar-expand-md navbar-dark" style="background-color: tomato">
         <div>
-            <a href="<%=request.getContextPath()%>" class="navbar-brand"> Company
+            <a href="https://www.javaguides.net" class="navbar-brand"> Company
                 Management App </a>
         </div>
 
         <ul class="navbar-nav">
-            <li><a href="<%=request.getContextPath()%>" class="nav-link">Companies</a></li>
+            <li><a href="<%=request.getContextPath()%>/list" class="nav-link">Companies</a></li>
         </ul>
     </nav>
 </header>
@@ -28,7 +29,7 @@
     <!-- <div class="alert alert-success" *ngIf='message'>{{message}}</div> -->
 
     <div class="container">
-        <h3 class="text-center">List of Company</h3>
+        <h3 class="text-center">List of Companies</h3>
         <hr>
         <div class="container text-left">
 
@@ -46,31 +47,27 @@
             </tr>
             </thead>
             <tbody>
+            <!--   for (Todo todo: todos) {  -->
 
             <jsp:useBean id="listCompany" scope="request" type="java.util.List"/>
             <c:forEach var="company" items="${listCompany}">
-                <c:if test="${company == null}">
-                    <tr>
-                        <th>${company}</th>
-                    </tr>
-                </c:if>
 
                 <tr>
                     <td>
-                        <c:out value="${company.id}" />
+                        <c:out value="${company.id}"/>
                     </td>
                     <td>
-                        <c:out value="${company.name}" />
+                        <c:out value="${company.name}"/>
                     </td>
                     <td>
-                        <c:out value="${company.city}" />
+                        <c:out value="${company.city}"/>
                     </td>
                     <td>
-                        <c:out value="${company.creator}" />
+                        <c:out value="${company.creator}"/>
                     </td>
                     <td>
-                        <a href="<%=request.getContextPath()%>/edit?id=<c:out value='${company.id}' />">Edit</a> &nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="<%=request.getContextPath()%>/delete?id=<c:out value='${company.id}' />">Delete</a>
+                        <a href="edit?id=<c:out value='${company.id}'/>">Edit</a> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="delete?id=<c:out value='${company.id}' />">Delete</a>
                     </td>
                 </tr>
             </c:forEach>

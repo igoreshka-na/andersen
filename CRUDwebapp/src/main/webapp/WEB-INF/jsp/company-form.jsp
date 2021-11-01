@@ -1,11 +1,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"%>
+         pageEncoding="UTF-8" %>
 <html>
 
 <head>
     <title>User Management Application</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
 <body>
@@ -44,19 +45,22 @@
                     </caption>
 
                     <c:if test="${company != null}">
-                        <input type="hidden" name="id" value="<c:out value='${company.id}' />" />
+                        <input type="hidden" name="id" value="<c:out value='${company.id}' />"/>
                     </c:if>
 
                     <fieldset class="form-group">
-                        <label>Name</label> <input type="text" value="<c:out value='${company.name}' />" class="form-control" name="name" required="required">
+                        <label>Name</label> <input type="text" value="<c:out value='${company.name}' />"
+                                                   class="form-control" name="name" required="required">
                     </fieldset>
 
                     <fieldset class="form-group">
-                        <label>City</label> <input type="text" value="<c:out value='${company.city}' />" class="form-control" name="city">
+                        <label>City</label> <input type="text" value="<c:out value='${company.city}' />"
+                                                   class="form-control" name="city">
                     </fieldset>
 
                     <fieldset class="form-group">
-                        <label>Creator</label> <input type="text" value="<c:out value='${company.creator}' />" class="form-control" name="creator">
+                        <label>Creator</label> <input type="text" value="<c:out value='${company.creator}' />"
+                                                      class="form-control" name="creator">
                     </fieldset>
 
                     <button type="submit" class="btn btn-success">Save</button>
