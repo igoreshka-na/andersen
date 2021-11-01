@@ -29,14 +29,14 @@ public class CompanyController extends HttpServlet {
                 case "/new":
                     showNewForm(req, resp);
                     break;
-                case "/save":
+                case "/insert":
                     insertStuff(req, resp);
                     break;
                 case "/delete":
                     deleteStuff(req, resp);
                     break;
-                case "/update":
-                    updateStuff(req, resp);
+                case "/edit":
+                    showEditForm(req, resp);
                     break;
                 default:
                     listCompany(req, resp);
@@ -48,24 +48,12 @@ public class CompanyController extends HttpServlet {
         }
     }
 
-    private void updateStuff(HttpServletRequest req, HttpServletResponse resp)
-            throws SQLException, IOException, ServletException {
-        int id = Integer.parseInt(req.getParameter("id"));
-        String name = req.getParameter("name");
-        String city = req.getParameter("city");
-        String creator = req.getParameter("creator");
-
-        Company company = new Company(id, name, city, creator);
-        crudCompany.update(company);
-        resp.sendRedirect("list");
-    }
-
     private void showEditForm(HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, IOException, ServletException {
         String id = req.getParameter("id");
         Company existingCompany = crudCompany.find(id);
-        RequestDispatcher dispatcher = req.getRequestDispatcher("/jsp/CompanyForm.jsp");
-        req.setAttribute("user", existingCompany);
+        RequestDispatcher dispatcher = req.getRequestDispatcher("WEB-INF/jsp/CompanyForm.jsp");
+        req.setAttribute("company", existingCompany);
         dispatcher.forward(req, resp);
     }
 
@@ -84,9 +72,9 @@ public class CompanyController extends HttpServlet {
         String city = req.getParameter("city");
         String creator = req.getParameter("creator");
 
-        Company newStuff = new Company(name, city, creator);
-        crudCompany.save(newStuff);
-        resp.sendRedirect("listCompany");
+        Company company = new Company(name, city, creator);
+        crudCompany.save(company);
+        resp.sendRedirect("list");
     }
 
     private void showNewForm (HttpServletRequest req, HttpServletResponse resp)
@@ -99,7 +87,7 @@ public class CompanyController extends HttpServlet {
             throws SQLException, IOException, ServletException {
         List<Company> listCompany = crudCompany.findAll();
         req.setAttribute("listCompany", listCompany);
-        RequestDispatcher dispatcher = req.getRequestDispatcher("WEB-INF/index.jsp");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("WEB-INF/jsp/CompanyList.jsp");
         dispatcher.forward(req, resp);
     }
 }

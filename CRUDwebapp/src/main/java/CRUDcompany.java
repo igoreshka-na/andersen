@@ -6,14 +6,14 @@ import java.util.List;
 
 @NoArgsConstructor
 public class CRUDcompany implements CompanyCRUD  {
-    private final String jdbcURL = "jdbc:mysql://localhost:3306/andersencrud?useSSL=false";
+    private final String jdbcURL = "jdbc:mysql://localhost:3306/andersencrud?useSSL=false&useUnicode=true&serverTimezone=UTC";
     private final String jdbcUsername = "root";
-    private final String jdbcPassword = "igoreshka_naadmadm45";
+    private final String jdbcPassword = "admadm45";
 
     protected Connection getConnection() {
         Connection connection = null;
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -43,23 +43,23 @@ public class CRUDcompany implements CompanyCRUD  {
 
     @Override
     public List<Company> findAll() throws SQLException {
-        List<Company> listStuff = new ArrayList<>();
+        List<Company> listCompany = new ArrayList<>();
         String sql = "SELECT * FROM andersencrud.company;";
+        try (Connection myconnection = getConnection();
+             PreparedStatement preparedStatement = myconnection.prepareStatement(sql)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-        Connection conn = getConnection();
-        Statement statement = conn.createStatement();
-        ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id_company");
+                String name = resultSet.getString("name");
+                String city = resultSet.getString("city");
+                String creator = resultSet.getString("creator");
 
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id_company");
-            String name = resultSet.getString("name");
-            String city = resultSet.getString("city");
-            String creator = resultSet.getString("creator");
-
-            Company company = new Company (id, name, city, creator);
-            listStuff.add(company);
+                Company company = new Company(id, name, city, creator);
+                listCompany.add(company);
+            }
+            return listCompany;
         }
-        return listStuff;
     }
 
     @Override
