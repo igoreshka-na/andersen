@@ -12,7 +12,7 @@
 <body>
 
 <header>
-    <nav class="navbar navbar-expand-md navbar-dark" style="background-color: tomato">
+    <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #3366CC">
         <div>
             <a href="<%=request.getContextPath()%>/list" class="navbar-brand"> Company Management App </a>
         </div>

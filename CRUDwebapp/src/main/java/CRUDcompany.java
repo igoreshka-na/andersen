@@ -4,6 +4,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class that connects the web application to the database and sends queries to the database to return models of the Company class.
+ * Implements the interface CompanyCRUD.
+ */
 @NoArgsConstructor
 public class CRUDcompany implements CompanyCRUD {
     private final String jdbcURL = "jdbc:mysql://localhost:3306/andersencrud?useSSL=false&useUnicode=true&serverTimezone=UTC";

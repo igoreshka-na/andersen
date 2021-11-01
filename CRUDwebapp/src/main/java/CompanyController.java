@@ -10,15 +10,14 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Web servlet for interaction with the application server.
+ * Methods "doGet" and "doPost" for reading, saving, editing and deleting objects from the database are written.
+ */
 @WebServlet("/")
 public class CompanyController extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-    private CRUDcompany crudCompany;
+    private final CRUDcompany crudCompany = new CRUDcompany();
     private static final Logger LOGGER = Logger.getLogger(CompanyController.class.getName());
-
-    public void init() {
-        crudCompany = new CRUDcompany();
-    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

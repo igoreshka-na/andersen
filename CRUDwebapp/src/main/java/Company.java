@@ -1,6 +1,10 @@
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Object model for the DataBase using @lombok.
+ * Uses 3 constructors.
+ */
 @Data
 @NoArgsConstructor
 public class Company {
