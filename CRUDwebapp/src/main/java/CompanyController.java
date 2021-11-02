@@ -34,16 +34,16 @@ public class CompanyController extends HttpServlet {
                     showNewForm(req, resp);
                     break;
                 case "/insert":
-                    insertStuff(req, resp);
+                    insertCompany(req, resp);
                     break;
                 case "/delete":
-                    deleteStuff(req, resp);
+                    deleteCompany(req, resp);
                     break;
                 case "/edit":
                     showEditForm(req, resp);
                     break;
                 case "/update":
-                    updatePlayers(req, resp);
+                    updateCompany(req, resp);
                     break;
                 default:
                     listCompany(req, resp);
@@ -57,14 +57,14 @@ public class CompanyController extends HttpServlet {
 
     private void showEditForm(HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, IOException, ServletException {
-        String id = req.getParameter("id");
+        int id = Integer.parseInt(req.getParameter("id"));
         Company existingCompany = crudCompany.find(id);
         RequestDispatcher dispatcher = req.getRequestDispatcher("WEB-INF/jsp/company-form.jsp");
         req.setAttribute("company", existingCompany);
         dispatcher.forward(req, resp);
     }
 
-    private void updatePlayers(HttpServletRequest req, HttpServletResponse resp) throws SQLException, IOException, ServletException {
+    private void updateCompany(HttpServletRequest req, HttpServletResponse resp) throws SQLException, IOException, ServletException {
         int id = Integer.parseInt(req.getParameter("id"));
         String name = req.getParameter("name");
         String city = req.getParameter("city");
@@ -75,23 +75,21 @@ public class CompanyController extends HttpServlet {
         resp.sendRedirect("list");
     }
 
-    private void deleteStuff(HttpServletRequest req, HttpServletResponse resp)
+    private void deleteCompany(HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, IOException, ServletException {
         int id = Integer.parseInt(req.getParameter("id"));
-
-        Company company = new Company(id);
-        crudCompany.delete(company);
+        crudCompany.delete(id);
         resp.sendRedirect("list");
     }
 
-    private void insertStuff(HttpServletRequest req, HttpServletResponse resp)
+    private void insertCompany(HttpServletRequest req, HttpServletResponse resp)
             throws SQLException, IOException, ServletException {
         String name = req.getParameter("name");
         String city = req.getParameter("city");
         String creator = req.getParameter("creator");
 
         Company company = new Company(name, city, creator);
-        crudCompany.save(company);
+        crudCompany.insert(company);
         resp.sendRedirect("list");
     }
 

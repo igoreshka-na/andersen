@@ -13,6 +13,11 @@ public class CRUDcompany implements CompanyCRUD {
     private final String jdbcURL = "jdbc:mysql://localhost:3306/andersencrud?useSSL=false&useUnicode=true&serverTimezone=UTC";
     private final String jdbcUsername = "root";
     private final String jdbcPassword = "admadm45";
+    private Connection connection;
+
+    public CRUDcompany(Connection connection) {
+        this.connection = connection;
+    }
 
     protected Connection getConnection() {
         Connection connection = null;
@@ -26,21 +31,23 @@ public class CRUDcompany implements CompanyCRUD {
     }
 
     @Override
-    public Company find(String id) throws SQLException {
+    public Company find(int id) throws SQLException {
+        Company company = null;
         String sql = "SELECT * FROM andersencrud.company WHERE id = ?;";
         String name = "", city = "", creator = "";
         Connection conn = getConnection();
 
         PreparedStatement statement = conn.prepareStatement(sql);
-        statement.setString(1, id);
+        statement.setInt(1, id);
         ResultSet resultSet = statement.executeQuery();
 
         if (resultSet.next()) {
             name = resultSet.getString("name");
             city = resultSet.getString("city");
             creator = resultSet.getString("creator");
+            company = new Company(id, name, city, creator);
         }
-        return new Company(name, city, creator);
+        return company;
     }
 
     @Override
@@ -65,20 +72,6 @@ public class CRUDcompany implements CompanyCRUD {
     }
 
     @Override
-    public boolean save(Company company) throws SQLException {
-        String sql = "INSERT into andersencrud.company (name, city, creator) VALUES (?, ?, ?);";
-        boolean rowInserted;
-        Connection conn = getConnection();
-        PreparedStatement statement = conn.prepareStatement(sql);
-        statement.setString(1, company.getName());
-        statement.setString(2, company.getCity());
-        statement.setString(3, company.getCreator());
-        rowInserted = statement.executeUpdate() > 0;
-
-        return rowInserted;
-    }
-
-    @Override
     public boolean update(Company company) throws SQLException {
         String sql = "UPDATE andersencrud.company SET name = ?, city = ?, creator = ? WHERE id = ?;";
         boolean rowUpdated;
@@ -94,15 +87,29 @@ public class CRUDcompany implements CompanyCRUD {
     }
 
     @Override
-    public boolean delete(Company company) throws SQLException {
+    public boolean delete(int id) throws SQLException {
         String sql = "DELETE FROM andersencrud.company where id = ?;";
         boolean rowDeleted;
 
         Connection conn = getConnection();
         PreparedStatement statement = conn.prepareStatement(sql);
-        statement.setInt(1, company.getId());
+        statement.setInt(1, id);
         rowDeleted = statement.executeUpdate() > 0;
 
         return rowDeleted;
+    }
+
+    @Override
+    public void insert(Company company) throws SQLException {
+        String sql = "INSERT INTO andersencrud.company (name, city, creator) VALUES (?, ?, ?);";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, company.getName());
+            preparedStatement.setString(2, company.getCity());
+            preparedStatement.setString(3, company.getCreator());
+            preparedStatement.executeUpdate();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 }

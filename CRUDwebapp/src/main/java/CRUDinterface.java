@@ -8,13 +8,13 @@ import java.util.List;
  */
 public interface CRUDinterface<T, ID> {
 
-    Company find(ID id) throws SQLException;
+    Company find(int id) throws SQLException;
 
     List<T> findAll() throws SQLException;
 
-    boolean save (T o) throws SQLException;
+    void insert(T o) throws SQLException;
 
     boolean update (T o) throws SQLException;
 
-    boolean delete (T o) throws SQLException;
+    boolean delete (int id) throws SQLException;
 }
