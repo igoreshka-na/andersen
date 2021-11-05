@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 public class CRUDcompanyTest {
     private static final String URL = "jdbc:mysql://localhost:3306/andersencrud?useSSL=false&useUnicode=true&serverTimezone=UTC";
     private static final String USER_NAME = "root";
-    private static final String PASSWORD = "admadm45";
+    private static final String PASSWORD = "igoreshka_naadmadm45";
     private static Connection connection;
     private static CRUDcompany crud;
 

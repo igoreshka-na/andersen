@@ -16,8 +16,12 @@ import java.util.logging.Logger;
  */
 @WebServlet("/")
 public class CompanyController extends HttpServlet {
-    private final CRUDcompany crudCompany = new CRUDcompany();
+    private final CRUDcompany crudCompany;
     private static final Logger LOGGER = Logger.getLogger(CompanyController.class.getName());
+
+    public CompanyController() {
+        crudCompany = new CRUDcompany();
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -30,24 +34,12 @@ public class CompanyController extends HttpServlet {
         String action = req.getServletPath();
         try {
             switch (action) {
-                case "/new":
-                    showNewForm(req, resp);
-                    break;
-                case "/insert":
-                    insertCompany(req, resp);
-                    break;
-                case "/delete":
-                    deleteCompany(req, resp);
-                    break;
-                case "/edit":
-                    showEditForm(req, resp);
-                    break;
-                case "/update":
-                    updateCompany(req, resp);
-                    break;
-                default:
-                    listCompany(req, resp);
-                    break;
+                case "/new" -> showNewForm(req, resp);
+                case "/insert" -> insertCompany(req, resp);
+                case "/delete" -> deleteCompany(req, resp);
+                case "/edit" -> showEditForm(req, resp);
+                case "/update" -> updateCompany(req, resp);
+                default -> listCompany(req, resp);
             }
         } catch (SQLException e) {
             //For simplicity just Log the exceptions

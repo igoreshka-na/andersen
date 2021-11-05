@@ -12,7 +12,7 @@ import java.util.List;
 public class CRUDcompany implements CompanyCRUD {
     private final String jdbcURL = "jdbc:mysql://localhost:3306/andersencrud?useSSL=false&useUnicode=true&serverTimezone=UTC";
     private final String jdbcUsername = "root";
-    private final String jdbcPassword = "admadm45";
+    private final String jdbcPassword = "igoreshka_naadmadm45";
     private Connection connection;
 
     public CRUDcompany(Connection connection) {
