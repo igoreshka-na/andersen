@@ -33,11 +33,12 @@ public class CRUDcompany implements CompanyCRUD {
     @Override
     public Company find(int id) throws SQLException {
         Company company = null;
-        String sql = "SELECT * FROM andersencrud.company WHERE id = ?;";
+        final String sql = "SELECT * FROM andersencrud.company WHERE id = ? JOIN andersencrud.creator creator ON company.id = creator.id_company;";
         String name = "", city = "", creator = "";
-        Connection conn = getConnection();
+        Connection connection = getConnection();
+        connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
-        PreparedStatement statement = conn.prepareStatement(sql);
+        PreparedStatement statement = connection.prepareStatement(sql);
         statement.setInt(1, id);
         ResultSet resultSet = statement.executeQuery();
 
@@ -53,9 +54,10 @@ public class CRUDcompany implements CompanyCRUD {
     @Override
     public List<Company> findAll() throws SQLException {
         List<Company> listCompany = new ArrayList<>();
-        String sql = "SELECT * FROM andersencrud.company;";
-        try (Connection myconnection = getConnection();
-             PreparedStatement preparedStatement = myconnection.prepareStatement(sql)) {
+        final String sql = "SELECT * FROM andersencrud.company JOIN andersencrud.creator cr ON company.id = cr.id_company;";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -73,14 +75,15 @@ public class CRUDcompany implements CompanyCRUD {
 
     @Override
     public boolean update(Company company) throws SQLException {
-        String sql = "UPDATE andersencrud.company SET name = ?, city = ?, creator = ? WHERE id = ?;";
+        final String sql = "UPDATE andersencrud.company SET name = ?, city = ? WHERE id = ?;";
         boolean rowUpdated;
-        Connection conn = getConnection();
-        PreparedStatement statement = conn.prepareStatement(sql);
+        Connection connection = getConnection();
+        connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+        PreparedStatement statement = connection.prepareStatement(sql);
         statement.setString(1, company.getName());
         statement.setString(2, company.getCity());
-        statement.setString(3, company.getCreator());
-        statement.setInt(4, company.getId());
+        statement.setInt(3, company.getId());
         rowUpdated = statement.executeUpdate() > 0;
 
         return rowUpdated;
@@ -88,11 +91,12 @@ public class CRUDcompany implements CompanyCRUD {
 
     @Override
     public boolean delete(int id) throws SQLException {
-        String sql = "DELETE FROM andersencrud.company where id = ?;";
+        final String sql = "DELETE FROM andersencrud.company where id = ?;";
         boolean rowDeleted;
 
-        Connection conn = getConnection();
-        PreparedStatement statement = conn.prepareStatement(sql);
+        Connection connection = getConnection();
+        connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+        PreparedStatement statement = connection.prepareStatement(sql);
         statement.setInt(1, id);
         rowDeleted = statement.executeUpdate() > 0;
 
@@ -101,13 +105,27 @@ public class CRUDcompany implements CompanyCRUD {
 
     @Override
     public void insert(Company company) throws SQLException {
-        String sql = "INSERT INTO andersencrud.company (name, city, creator) VALUES (?, ?, ?);";
+        final String sql = "INSERT INTO andersencrud.company (name, city) VALUES (?, ?);";
+        final String sqlC = "INSERT INTO andersencrud.creator (name) VALUES (?)";
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, company.getName());
-            preparedStatement.setString(2, company.getCity());
-            preparedStatement.setString(3, company.getCreator());
-            preparedStatement.executeUpdate();
+             PreparedStatement psCompany = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+             PreparedStatement psCreator = connection.prepareStatement(sqlC)) {
+            connection.setAutoCommit(false);
+            connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+            psCompany.setString(1, company.getName());
+            psCompany.setString(2, company.getCity());
+            psCompany.executeUpdate();
+
+            try (ResultSet generatedKeys = psCompany.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    company.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException();
+                }
+            }
+            psCreator.setString(3, company.getCreator());
+            psCreator.executeUpdate();
+            connection.setAutoCommit(true);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
