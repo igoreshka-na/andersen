@@ -2,5 +2,5 @@ package db;
 
 import model.Person;
 
-public interface DAOinterfacePerson extends DAOinterface<Person, String> {
+public interface DAOinterfacePerson extends DAOinterface<Person, Long> {
 }
