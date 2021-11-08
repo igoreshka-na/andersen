@@ -1,6 +1,6 @@
 package db;
 
-import model.Person;
+import model.User;
 
-public interface DAOinterfacePerson extends DAOinterface<Person, Long> {
+public interface DAOinterfacePerson extends DAOinterface<User, Long> {
 }

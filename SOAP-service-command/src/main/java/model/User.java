@@ -1,6 +1,7 @@
 package model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -8,9 +9,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Data
+@NoArgsConstructor
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Person {
+public class User {
     @XmlElement
     private long id;
     @XmlElement
@@ -18,22 +20,20 @@ public class Person {
     @XmlElement
     private String surname;
     @XmlElement
-    private String role;
-    @XmlElement
-    private String group;
+    private Role role;
 
-    public Person() {
+    public User(long id) {
+        this(id, null, null, null);
     }
 
-    public Person(long id) {
-        this.id = id;
+    public User(long id, String name, String surname) {
+        this(id, name, surname, Role.USER);
     }
 
-    public Person(long id, String name, String surname, String role, String group) {
+    public User(long id, String name, String surname, Role role) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.role = role;
-        this.group = group;
     }
 }

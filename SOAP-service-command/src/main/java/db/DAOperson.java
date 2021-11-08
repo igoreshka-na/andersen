@@ -1,6 +1,7 @@
 package db;
 
-import model.Person;
+import model.Role;
+import model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -24,10 +25,11 @@ public class DAOperson implements DAOinterfacePerson {
     }
 
     @Override
-    public Person find(Long id) throws SQLException {
-        Person person = null;
+    public User find(Long id) throws SQLException {
+        User user = null;
         final String sql = "SELECT * FROM wsdb.users WHERE id = ?";
-        String name = "", surname = "", role = "", group = "";
+        String name = "", surname = "", group = "";
+        Role role = null;
         Connection connection = getConnection();
 
         PreparedStatement statement = connection.prepareStatement(sql);
@@ -37,17 +39,17 @@ public class DAOperson implements DAOinterfacePerson {
         if (resultSet.next()) {
             name = resultSet.getString("name");
             surname = resultSet.getString("surname");
-            role = resultSet.getString("role");
+            role = Role.valueOf(resultSet.getString("role"));
             group = resultSet.getString("group");
-            person = new Person(id, name, surname, role, group);
+            user = new User(id, name, surname, role);
         }
-        return person;
+        return user;
     }
 
     @Override
-    public List<Person> findAll() throws SQLException {
-        List<Person> list = new ArrayList<>();
-        final String sql = "SELECT * FROM wsdb.users";
+    public List<User> findAll() throws SQLException {
+        List<User> list = new ArrayList<>();
+        final String sql = "SELECT * FROM wsdb.users FULL OUTER JOIN wsdb.group";
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -56,10 +58,10 @@ public class DAOperson implements DAOinterfacePerson {
                 long id = resultSet.getLong("id");
                 String name = resultSet.getString("name");
                 String surname = resultSet.getString("surname");
-                String role = resultSet.getString("role");
+                Role role = Role.valueOf(resultSet.getString("role"));
                 String group = resultSet.getString("group");
 
-                Person person = new Person(id, name, surname, role, group);
+                User person = new User(id, name, surname, role);
                 list.add(person);
             }
             return list;
@@ -67,7 +69,7 @@ public class DAOperson implements DAOinterfacePerson {
     }
 
     @Override
-    public void insert(Person person) throws SQLException {
+    public boolean insert(User person) throws SQLException {
         final String sql = "INSERT INTO wsdb.users (id, name, surname, role, group) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -76,28 +78,28 @@ public class DAOperson implements DAOinterfacePerson {
             statement.setString(3, person.getSurname());
             statement.setString(4, person.getRole());
             statement.setString(5, person.getGroup());
-            statement.executeUpdate();
+            return statement.executeUpdate() > 0;
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public boolean update(Person person) throws SQLException {
-        final String sql = "UPDATE wsdb.users SET name = ?, surname = ?, role = ?, group = ? WHERE id = ?";
-        boolean rowUpdated;
-        Connection connection = getConnection();
-
-        PreparedStatement statement = connection.prepareStatement(sql);
-        statement.setString(1, person.getName());
-        statement.setString(2, person.getSurname());
-        statement.setString(3, person.getRole());
-        statement.setString(4, person.getGroup());
-        statement.setLong(5, person.getId());
-        rowUpdated = statement.executeUpdate() > 0;
-
-        return rowUpdated;
-    }
+//    @Override
+//    public boolean update(User person) throws SQLException {
+//        final String sql = "UPDATE wsdb.users SET name = ?, surname = ?, role = ?, group = ? WHERE id = ?";
+//        boolean rowUpdated;
+//        Connection connection = getConnection();
+//
+//        PreparedStatement statement = connection.prepareStatement(sql);
+//        statement.setString(1, person.getName());
+//        statement.setString(2, person.getSurname());
+//        statement.setString(3, person.getRole());
+//        statement.setString(4, person.getGroup());
+//        statement.setLong(5, person.getId());
+//        rowUpdated = statement.executeUpdate() > 0;
+//
+//        return rowUpdated;
+//    }
 
     @Override
     public boolean delete(Long id) throws SQLException {
@@ -110,22 +112,5 @@ public class DAOperson implements DAOinterfacePerson {
         rowDeleted = statement.executeUpdate() > 0;
 
         return rowDeleted;
-    }
-
-    public List<Person> findAllID() throws SQLException {
-        List<Person> list = new ArrayList<>();
-        final String sql = "SELECT wsdb.id FROM wsdb.users WHERE role = dev OR role = lead";
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                long id = resultSet.getLong("id");
-
-                Person person = new Person(id);
-                list.add(person);
-            }
-            return list;
-        }
     }
 }
