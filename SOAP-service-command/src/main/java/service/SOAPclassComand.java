@@ -12,8 +12,11 @@ import java.util.List;
 public class SOAPclassComand implements SOAPService {
     private DAOperson persons;
 
+    public SOAPclassComand() {
+    }
+
     @Override
-    @WebMethod(operationName = "setPerson")
+    @WebMethod
     public Person setPerson(long id, String name, String surname, String role, String group) throws SQLException {
         Person person = new Person(id, name, surname, role, group);
         persons.insert(person);
@@ -21,20 +24,27 @@ public class SOAPclassComand implements SOAPService {
     }
 
     @Override
-    @WebMethod(operationName = "getPerson")
+    @WebMethod
     public Person getPerson(long id) throws SQLException {
         return persons.find(id);
     }
 
-    /**
-     * Метод для нотификатора (ID участников, не админа и не кураторов)
-     *
-     * @return List
-     * @throws SQLException
-     */
     @Override
-    @WebMethod(operationName = "getListID")
-    public List<Long> getIdList() throws SQLException {
-        return null;
+    @WebMethod
+    public boolean updatePerson(long id, String name, String surname, String role, String group) throws SQLException {
+        Person person = new Person(id, name, surname, role, group);
+        return persons.update(person);
+    }
+
+    @Override
+    @WebMethod
+    public boolean deletePerson(long id) throws SQLException {
+        return persons.delete(id);
+    }
+
+    @Override
+    @WebMethod
+    public List<Person> getIdList() throws SQLException {
+        return persons.findAllID();
     }
 }

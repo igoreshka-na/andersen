@@ -16,5 +16,11 @@ public interface SOAPService {
     Person getPerson(long id) throws SQLException;
 
     @WebMethod
-    List<Long> getIdList() throws SQLException;
+    List<Person> getIdList() throws SQLException;
+
+    @WebMethod
+    boolean updatePerson(long id, String name, String surname, String role, String group) throws SQLException;
+
+    @WebMethod
+    boolean deletePerson(long id) throws SQLException;
 }

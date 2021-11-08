@@ -11,7 +11,6 @@ public class DAOperson implements DAOinterfacePerson {
     private final String url = "jdbc:postgresql://localhost:5432/wsdb?useSSL=false&useUnicode=true&serverTimezone=UTC";
     private final String username = "???";
     private final String password = "???";
-    private Connection connection;
 
     protected Connection getConnection() {
         Connection connection = null;
@@ -30,7 +29,6 @@ public class DAOperson implements DAOinterfacePerson {
         final String sql = "SELECT * FROM wsdb.users WHERE id = ?";
         String name = "", surname = "", role = "", group = "";
         Connection connection = getConnection();
-        connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setLong(1, id);
@@ -103,7 +101,7 @@ public class DAOperson implements DAOinterfacePerson {
 
     @Override
     public boolean delete(Long id) throws SQLException {
-        final String sql = "DELETE FROM wsdb.users where id = ?";
+        final String sql = "DELETE FROM wsdb.users WHERE id = ?";
         boolean rowDeleted;
 
         Connection connection = getConnection();
@@ -112,5 +110,22 @@ public class DAOperson implements DAOinterfacePerson {
         rowDeleted = statement.executeUpdate() > 0;
 
         return rowDeleted;
+    }
+
+    public List<Person> findAllID() throws SQLException {
+        List<Person> list = new ArrayList<>();
+        final String sql = "SELECT wsdb.id FROM wsdb.users WHERE role = dev OR role = lead";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                long id = resultSet.getLong("id");
+
+                Person person = new Person(id);
+                list.add(person);
+            }
+            return list;
+        }
     }
 }
