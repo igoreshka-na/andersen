@@ -1,6 +1,7 @@
 package service;
 
-import db.DAOperson;
+import db.DAOclassImp;
+import model.Group;
 import model.User;
 
 import javax.jws.WebMethod;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @WebService(endpointInterface = "service.SOAPService")
 public class SOAPclassImpl implements SOAPService {
-    private DAOperson users;
+    private DAOclassImp users;
 
     public SOAPclassImpl() {
     }
@@ -20,6 +21,27 @@ public class SOAPclassImpl implements SOAPService {
     public User getUser(long id) {
         try {
             return users.find(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    @WebMethod
+    public List<User> getAllUsers() {
+        try {
+            return users.findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List<User> findAllForGroup(Group group) {
+        try {
+            return users.findAllINGroup(group.getName());
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -37,17 +59,6 @@ public class SOAPclassImpl implements SOAPService {
     }
 
     @Override
-    @WebMethod
-    public List<User> getAllUsers() {
-        try {
-            return users.findAll();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    @Override
     public boolean saveUser(User user) {
         try {
             return users.insert(user);
@@ -55,5 +66,50 @@ public class SOAPclassImpl implements SOAPService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public List<Group> findAllGroups() {
+        return null;
+    }
+
+    @Override
+    public boolean insertGroup(Group group) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteGroup(int id) {
+        return false;
+    }
+
+    @Override
+    public boolean insertUserInGroup(long idUser, int idGroup) {
+        return false;
+    }
+
+    @Override
+    public boolean insertTeamLeadInGroup(long idUser, int idGroup) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteUserInGroup(long idUser, int idGroup) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteTeamLeadInGroup(long idUser, int idGroup) {
+        return false;
+    }
+
+    @Override
+    public boolean insertAdmin(long idUser) {
+        return false;
+    }
+
+    @Override
+    public boolean insertUser(long idUser) {
+        return false;
     }
 }

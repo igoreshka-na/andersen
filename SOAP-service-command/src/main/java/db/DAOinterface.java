@@ -8,7 +8,11 @@ public interface DAOinterface<T, ID> {
 
     List<T> findAll() throws SQLException;
 
+    List<T> findAllINGroup(String group) throws SQLException;
+
     boolean insert(T o) throws SQLException;
 
     boolean delete (ID id) throws SQLException;
+
+
 }
