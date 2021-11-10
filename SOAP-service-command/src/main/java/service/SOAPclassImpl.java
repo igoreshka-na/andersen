@@ -1,6 +1,7 @@
 package service;
 
-import db.DAOclassImp;
+import db.DAOgroup.DAOclassGroupImp;
+import db.DAOuser.DAOclassUserImp;
 import model.Group;
 import model.User;
 
@@ -8,17 +9,19 @@ import javax.jws.WebMethod;
 import javax.jws.WebService;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Locale;
 
 @WebService(endpointInterface = "service.SOAPService")
 public class SOAPclassImpl implements SOAPService {
-    private DAOclassImp users;
+    private DAOclassUserImp users;
+    private DAOclassGroupImp groups;
 
     public SOAPclassImpl() {
     }
 
     @Override
     @WebMethod
-    public User getUser(long id) {
+    public User getUser(int id) {
         try {
             return users.find(id);
         } catch (SQLException e) {
@@ -39,9 +42,9 @@ public class SOAPclassImpl implements SOAPService {
     }
 
     @Override
-    public List<User> findAllForGroup(Group group) {
+    public List<User> findAllInGroup(String group) {
         try {
-            return users.findAllINGroup(group.getName());
+            return users.findAllINGroup(group.toLowerCase(Locale.ROOT));
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -49,7 +52,7 @@ public class SOAPclassImpl implements SOAPService {
     }
 
     @Override
-    public boolean deleteUser(long id) {
+    public boolean deleteUser(int id) {
         try {
             return users.delete(id);
         } catch (SQLException e) {
@@ -74,7 +77,7 @@ public class SOAPclassImpl implements SOAPService {
     }
 
     @Override
-    public boolean insertGroup(Group group) {
+    public boolean saveGroup(Group group) {
         return false;
     }
 
@@ -84,32 +87,32 @@ public class SOAPclassImpl implements SOAPService {
     }
 
     @Override
-    public boolean insertUserInGroup(long idUser, int idGroup) {
+    public boolean insertUserInGroup(int idUser, String idGroup) {
         return false;
     }
 
     @Override
-    public boolean insertTeamLeadInGroup(long idUser, int idGroup) {
+    public boolean insertTeamLeadInGroup(int idUser, String idGroup) {
         return false;
     }
 
     @Override
-    public boolean deleteUserInGroup(long idUser, int idGroup) {
+    public boolean deleteUserInGroup(int idUser, String idGroup) {
         return false;
     }
 
     @Override
-    public boolean deleteTeamLeadInGroup(long idUser, int idGroup) {
+    public boolean deleteTeamLeadInGroup(int idUser, String idGroup) {
         return false;
     }
 
     @Override
-    public boolean insertAdmin(long idUser) {
+    public boolean setAdmin(long idUser) {
         return false;
     }
 
     @Override
-    public boolean insertUser(long idUser) {
+    public boolean setUser(long idUser) {
         return false;
     }
 }

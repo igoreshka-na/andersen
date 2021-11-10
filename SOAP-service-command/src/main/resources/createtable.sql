@@ -20,9 +20,10 @@ CREATE TABLE user_roles
 
 CREATE TABLE user_groups
 (
-    user_id      INTEGER NOT NULL,
-    team_lead_id INTEGER,
     group        VARCHAR,
+    team_lead_id INTEGER,
+    user_id      INTEGER NOT NULL
+
     CONSTRAINT user_groups_idx UNIQUE (user_id, group),
     FOREIGN KEY (user_id) REFERENCES users (id)
 

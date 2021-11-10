@@ -14,16 +14,16 @@ public interface SOAPService {
      * Методы работы с участниками
      */
     @WebMethod
-    User getUser(long id);
+    User getUser(int id);
 
     @WebMethod
     List<User> getAllUsers();
 
     @WebMethod
-    List<User> findAllForGroup(Group group);
+    List<User> findAllInGroup(String group);
 
     @WebMethod
-    boolean deleteUser(long id);
+    boolean deleteUser(int id);
 
     @WebMethod
     boolean saveUser(User user);
@@ -35,29 +35,29 @@ public interface SOAPService {
     List<Group> findAllGroups();
 
     @WebMethod
-    boolean insertGroup(Group group);
+    boolean saveGroup(Group group);
 
     @WebMethod
     boolean deleteGroup(int id);
 
     @WebMethod
-    boolean insertUserInGroup(long idUser, int idGroup);
+    boolean insertUserInGroup(int idUser, String idGroup);
 
     @WebMethod
-    boolean insertTeamLeadInGroup(long idUser, int idGroup);
+    boolean insertTeamLeadInGroup(int idUser, String idGroup);
 
     @WebMethod
-    boolean deleteUserInGroup(long idUser, int idGroup);
+    boolean deleteUserInGroup(int idUser, String idGroup);
 
     @WebMethod
-    boolean deleteTeamLeadInGroup(long idUser, int idGroup);
+    boolean deleteTeamLeadInGroup(int idUser, String idGroup);
 
     /**
      * Методы для работы с ролями
      */
     @WebMethod
-    boolean insertAdmin(long idUser);
+    boolean setAdmin(long idUser);
 
     @WebMethod
-    boolean insertUser(long idUser);
+    boolean setUser(long idUser);
 }

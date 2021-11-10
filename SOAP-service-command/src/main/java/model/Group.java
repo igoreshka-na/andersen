@@ -7,7 +7,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -20,17 +19,19 @@ public class Group {
     private String name;
     @XmlElement
     private User teamLead;
-    @XmlElement
-    private List<User> users;
 
     public Group(String name) {
-        this(null, name, null, null);
+        this(null, name, null);
     }
 
-    public Group(Integer id, String name, User teamLead, List<User> users) {
+    public Group(Integer id, String name, User teamLead) {
         this.id = id;
         this.name = name;
         this.teamLead = teamLead;
-        this.users = users;
+    }
+
+    public Group(String name, User teamLead) {
+        this.name = name;
+        this.teamLead = teamLead;
     }
 }

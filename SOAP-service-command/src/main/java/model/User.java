@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class User {
     @XmlElement
-    private long id;
+    private int id;
     @XmlElement
     private String name;
     @XmlElement
@@ -22,15 +22,15 @@ public class User {
     @XmlElement
     private Role role;
 
-    public User(long id) {
+    public User(int id) {
         this(id, null, null, null);
     }
 
-    public User(long id, String name, String surname) {
+    public User(int id, String name, String surname) {
         this(id, name, surname, Role.USER);
     }
 
-    public User(long id, String name, String surname, Role role) {
+    public User(int id, String name, String surname, Role role) {
         this.id = id;
         this.name = name;
         this.surname = surname;
