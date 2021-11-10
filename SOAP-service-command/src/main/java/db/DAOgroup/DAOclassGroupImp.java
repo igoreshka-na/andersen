@@ -9,14 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DAOclassGroupImp implements DAOinterfaceGroup {
-    private FactoryConnections factory;
+    private final FactoryConnections factory;
+
+    public DAOclassGroupImp() {
+        factory = new FactoryConnections();
+    }
 
     @Override
     public Group find(String nameGroup) throws SQLException {
         Group group = null;
         User lead;
-        final String sql = "SELECT DISTINCT name FROM wsdb.user_groups WHERE name = ? " +
-                "FULL OUTER JOIN wsdb.users user ON user_groups.team_lead_id = user.id";
+        final String sql = "SELECT DISTINCT user_groups.name FROM wsdb.user_groups WHERE user_groups.name = ?";
         int id;
         String nameLead = "", surnameLead = "";
 
@@ -27,12 +30,8 @@ public class DAOclassGroupImp implements DAOinterfaceGroup {
 
             if (resultSet.next()) {
                 nameGroup = resultSet.getString("name");
-                id = resultSet.getInt("id");
-                nameLead = resultSet.getString("name");
-                surnameLead = resultSet.getString("surname");
 
-                lead = new User(id, nameLead, surnameLead);
-                group = new Group(nameGroup, lead);
+                group = new Group(nameGroup);
             }
             return group;
         }
@@ -41,7 +40,7 @@ public class DAOclassGroupImp implements DAOinterfaceGroup {
     @Override
     public List<Group> findAll() throws SQLException {
         List<Group> list = new ArrayList<>();
-        final String sql = "SELECT DISTINCT name FROM wsdb.users FULL OUTER JOIN wsdb.users user ON user_groups.team_lead_id = user.id";
+        final String sql = "SELECT DISTINCT name FROM wsdb.user_groups";
 
         try (Connection connection = factory.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -50,12 +49,8 @@ public class DAOclassGroupImp implements DAOinterfaceGroup {
 
             while (resultSet.next()) {
                 String nameGroup = resultSet.getString("name");
-                int id = resultSet.getInt("id");
-                String nameLead = resultSet.getString("name");
-                String surnameLead = resultSet.getString("surname");
 
-                User lead = new User(id, nameLead, surnameLead);
-                Group groups = new Group(nameGroup, lead);
+                Group groups = new Group(nameGroup);
                 list.add(groups);
             }
             return list;
@@ -66,27 +61,26 @@ public class DAOclassGroupImp implements DAOinterfaceGroup {
     public boolean insert(Group group) throws SQLException {
         Group groups = find(group.getName());
         if (groups == null) {
-            final String sql = "INSERT INTO wsdb.user_groups (name, team_lead_id) VALUES (?, ?)";
+            final String sql = "INSERT INTO wsdb.user_groups (name) VALUES (?)";
 
             try (Connection connection = factory.getConnection();
                  PreparedStatement statement = connection.prepareStatement(sql)) {
 
                 statement.setString(1, group.getName());
-                statement.setInt(2, group.getTeamLead().getId());
                 return statement.executeUpdate() > 0;
             } catch (NullPointerException e) {
                 e.printStackTrace();
                 return false;
             }
         } else {
-            final String sql = "UPDATE wsdb.user_groups SET team_lead_id = ? WHERE name = ?";
+            final String sql = "UPDATE wsdb.user_groups SET name = ? WHERE name = ?";
             boolean rowUpdated;
 
             try (Connection connection = factory.getConnection();
                  PreparedStatement statement = connection.prepareStatement(sql)) {
 
                 statement.setString(1, group.getName());
-                statement.setInt(2, group.getTeamLead().getId());
+                statement.setString(2, group.getName());
                 rowUpdated = statement.executeUpdate() > 0;
 
                 return rowUpdated;
@@ -107,5 +101,21 @@ public class DAOclassGroupImp implements DAOinterfaceGroup {
 
             return rowDeleted;
         }
+    }
+
+    public boolean insertUserInGroup(int idUser, String idGroup) {
+        return false;
+    }
+
+    public boolean insertTeamLeadInGroup(int idUser, String idGroup) {
+        return false;
+    }
+
+    public boolean deleteUserInGroup(int idUser, String idGroup) {
+        return false;
+    }
+
+    public boolean deleteTeamLeadInGroup(int idUser, String idGroup) {
+        return false;
     }
 }

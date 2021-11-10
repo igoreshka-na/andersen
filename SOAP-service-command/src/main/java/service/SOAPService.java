@@ -38,7 +38,7 @@ public interface SOAPService {
     boolean saveGroup(Group group);
 
     @WebMethod
-    boolean deleteGroup(int id);
+    boolean deleteGroup(String name);
 
     @WebMethod
     boolean insertUserInGroup(int idUser, String idGroup);
@@ -56,8 +56,8 @@ public interface SOAPService {
      * Методы для работы с ролями
      */
     @WebMethod
-    boolean setAdmin(long idUser);
+    boolean setAdmin(int idUser);
 
     @WebMethod
-    boolean setUser(long idUser);
+    boolean setUser(int idUser);
 }

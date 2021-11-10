@@ -9,13 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DAOclassUserImp implements DAOinterfaceUser {
-    private FactoryConnections factory;
+    private final FactoryConnections factory;
+
+    public DAOclassUserImp() {
+        factory = new FactoryConnections();
+    }
 
     @Override
     public User find(Integer id) throws SQLException {
         User user = null;
-        final String sql = "SELECT * FROM wsdb.users WHERE id = ? " +
-                "FULL OUTER JOIN wsdb.user_roles role ON users.id = role.user_id";
+        final String sql = "SELECT * FROM wsdb.users " +
+                "FULL OUTER JOIN wsdb.user_roles role ON users.id = role.user_id WHERE id = ?";
         String name = "", surname = "";
         Role role;
         try (Connection connection = factory.getConnection();
@@ -37,7 +41,7 @@ public class DAOclassUserImp implements DAOinterfaceUser {
     @Override
     public List<User> findAll() throws SQLException {
         List<User> list = new ArrayList<>();
-        final String sql = "SELECT * FROM wsdb.users FULL OUTER JOIN wsdb.user_roles wsdb.user_roles role ON users.id = role.user_id";
+        final String sql = "SELECT * FROM wsdb.users FULL OUTER JOIN wsdb.user_roles role ON users.id = role.user_id";
         try (Connection connection = factory.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -57,7 +61,7 @@ public class DAOclassUserImp implements DAOinterfaceUser {
 
     public List<User> findAllINGroup(String group) throws SQLException {
         List<User> list = new ArrayList<>();
-        final String sql = "SELECT * FROM wsdb.users WHERE group = ? FULL OUTER JOIN wsdb.user_roles wsdb.user_roles role ON users.id = role.user_id AND " +
+        final String sql = "SELECT * FROM wsdb.users WHERE group = ? FULL OUTER JOIN wsdb.user_roles role ON users.id = role.user_id AND " +
                 "FULL OUTER JOIN wsdb.groups group ON users.id = group.user_id";
         try (Connection connection = factory.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -94,6 +98,7 @@ public class DAOclassUserImp implements DAOinterfaceUser {
 
                 statement2.setInt(1, user.getId());
                 statement2.setString(2, String.valueOf(Role.USER));
+                statement1.executeUpdate();
                 return statement2.executeUpdate() > 0;
             } catch (NullPointerException e) {
                 e.printStackTrace();

@@ -1,6 +1,7 @@
 package service;
 
 import db.DAOgroup.DAOclassGroupImp;
+import db.DAOrole.DAOclassRoleImp;
 import db.DAOuser.DAOclassUserImp;
 import model.Group;
 import model.User;
@@ -13,10 +14,14 @@ import java.util.Locale;
 
 @WebService(endpointInterface = "service.SOAPService")
 public class SOAPclassImpl implements SOAPService {
-    private DAOclassUserImp users;
-    private DAOclassGroupImp groups;
+    private final DAOclassUserImp users;
+    private final DAOclassGroupImp groups;
+    private final DAOclassRoleImp roles;
 
     public SOAPclassImpl() {
+        users = new DAOclassUserImp();
+        groups = new DAOclassGroupImp();
+        roles = new DAOclassRoleImp();
     }
 
     @Override
@@ -73,17 +78,32 @@ public class SOAPclassImpl implements SOAPService {
 
     @Override
     public List<Group> findAllGroups() {
-        return null;
+        try {
+            return groups.findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
     public boolean saveGroup(Group group) {
-        return false;
+        try {
+            return groups.insert(group);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
-    public boolean deleteGroup(int id) {
-        return false;
+    public boolean deleteGroup(String name) {
+        try {
+            return groups.delete(name);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
@@ -107,12 +127,12 @@ public class SOAPclassImpl implements SOAPService {
     }
 
     @Override
-    public boolean setAdmin(long idUser) {
-        return false;
+    public boolean setAdmin(int idUser) {
+        return roles.setAdmin(idUser);
     }
 
     @Override
-    public boolean setUser(long idUser) {
-        return false;
+    public boolean setUser(int idUser) {
+        return roles.setUser(idUser);
     }
 }

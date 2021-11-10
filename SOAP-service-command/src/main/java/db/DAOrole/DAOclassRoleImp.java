@@ -8,7 +8,11 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DAOclassRoleImp implements DAOinterfaceRole {
-    private FactoryConnections factory;
+    private final FactoryConnections factory;
+
+    public DAOclassRoleImp() {
+        factory = new FactoryConnections();
+    }
 
     @Override
     public boolean setAdmin(int id) {
