@@ -10,5 +10,5 @@ public interface DAOinterface<T, ID> {
 
     boolean insert(T o) throws SQLException;
 
-    boolean delete (ID id) throws SQLException;
+    boolean delete(ID id) throws SQLException;
 }

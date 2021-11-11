@@ -4,6 +4,7 @@ import model.Group;
 import model.User;
 
 import javax.jws.WebMethod;
+import javax.jws.WebParam;
 import javax.jws.WebService;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface SOAPService {
      * Методы работы с участниками
      */
     @WebMethod
-    User getUser(int id);
+    User getUser(@WebParam(name = "id") int id);
 
     @WebMethod
     List<User> getAllUsers();
@@ -24,10 +25,10 @@ public interface SOAPService {
 //    List<User> findAllInGroup(String group);
 
     @WebMethod
-    boolean deleteUser(int id);
+    boolean deleteUser(@WebParam(name = "id") int id);
 
     @WebMethod
-    boolean saveUser(User user);
+    boolean saveUser(@WebParam(name = "user") User user);
 
     /**
      * Методы для работы с группами
@@ -36,29 +37,29 @@ public interface SOAPService {
     List<Group> findAllGroups();
 
     @WebMethod
-    boolean saveGroup(Group group);
+    boolean saveGroup(@WebParam(name = "group") Group group);
 
     @WebMethod
-    boolean deleteGroup(String name);
+    boolean deleteGroup(@WebParam(name = "name") String name);
 
     @WebMethod
-    boolean insertUserInGroup(int idUser, String idGroup);
+    boolean insertUserInGroup(@WebParam(name = "idUser") int idUser, @WebParam(name = "idGroup") String idGroup);
 
     @WebMethod
-    boolean insertTeamLeadInGroup(int idUser, String idGroup);
+    boolean insertTeamLeadInGroup(@WebParam(name = "idUser") int idUser, @WebParam(name = "idGroup") String idGroup);
 
     @WebMethod
-    boolean deleteUserInGroup(int idUser, String idGroup);
+    boolean deleteUserInGroup(@WebParam(name = "idUser") int idUser, @WebParam(name = "idGroup") String idGroup);
 
     @WebMethod
-    boolean deleteTeamLeadInGroup(int idUser, String idGroup);
+    boolean deleteTeamLeadInGroup(@WebParam(name = "idUser") int idUser, @WebParam(name = "idGroup") String idGroup);
 
     /**
      * Методы для работы с ролями
      */
     @WebMethod
-    boolean setAdmin(int idUser);
+    boolean setAdmin(@WebParam(name = "idUser") int idUser);
 
     @WebMethod
-    boolean setUser(int idUser);
+    boolean setUser(@WebParam(name = "idUser") int idUser);
 }

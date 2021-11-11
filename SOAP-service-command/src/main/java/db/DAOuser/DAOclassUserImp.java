@@ -91,7 +91,7 @@ public class DAOclassUserImp implements DAOinterfaceUser {
             final String sql2 = "INSERT INTO wsdb.user_roles (user_id, role) VALUES (?, ?)";
             try (Connection connection = factory.getConnection();
                  PreparedStatement statement1 = connection.prepareStatement(sql1);
-                PreparedStatement statement2 = connection.prepareStatement(sql2)) {
+                 PreparedStatement statement2 = connection.prepareStatement(sql2)) {
 
                 statement1.setInt(1, user.getId());
                 statement1.setString(2, user.getName());
