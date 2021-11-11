@@ -19,8 +19,9 @@ public interface SOAPService {
     @WebMethod
     List<User> getAllUsers();
 
-    @WebMethod
-    List<User> findAllInGroup(String group);
+    // In development
+//    @WebMethod
+//    List<User> findAllInGroup(String group);
 
     @WebMethod
     boolean deleteUser(int id);

@@ -20,8 +20,6 @@ public class DAOclassGroupImp implements DAOinterfaceGroup {
         Group group = null;
         User lead;
         final String sql = "SELECT DISTINCT user_groups.name FROM wsdb.user_groups WHERE user_groups.name = ?";
-        int id;
-        String nameLead = "", surnameLead = "";
 
         try (Connection connection = factory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -104,18 +102,68 @@ public class DAOclassGroupImp implements DAOinterfaceGroup {
     }
 
     public boolean insertUserInGroup(int idUser, String idGroup) {
-        return false;
+        final String sql = "INSERT INTO wsdb.user_groups (name, user_id) VALUES (?, ?)";
+
+        try (Connection connection = factory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, idGroup);
+            statement.setInt(2, idUser);
+            return statement.executeUpdate() > 0;
+        } catch (NullPointerException | SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean insertTeamLeadInGroup(int idUser, String idGroup) {
-        return false;
+        final String sql = "INSERT INTO wsdb.user_groups (name, team_lead_id) VALUES (?, ?)";
+
+        try (Connection connection = factory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, idGroup);
+            statement.setInt(2, idUser);
+            return statement.executeUpdate() > 0;
+        } catch (NullPointerException | SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean deleteUserInGroup(int idUser, String idGroup) {
-        return false;
+        final String sql = "DELETE FROM wsdb.user_groups WHERE user_id = ?";
+        boolean rowDeleted;
+
+        try (Connection connection = factory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+//            statement.setString(1, idGroup);
+            statement.setInt(1, idUser);
+            rowDeleted = statement.executeUpdate() > 0;
+
+            return rowDeleted;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean deleteTeamLeadInGroup(int idUser, String idGroup) {
-        return false;
+        final String sql = "DELETE FROM wsdb.user_groups WHERE team_lead_id = ?";
+        boolean rowDeleted;
+
+        try (Connection connection = factory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+//            statement.setString(1, idGroup);
+            statement.setInt(1, idUser);
+            rowDeleted = statement.executeUpdate() > 0;
+
+            return rowDeleted;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

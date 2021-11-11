@@ -1,34 +1,37 @@
-DROP TABLE IF EXISTS user_roles;
-DROP TABLE IF EXISTS users;
-
-CREATE TABLE users
+CREATE TABLE wsdb.users
 (
-    id      INTEGER PRIMARY KEY,
-    name    VARCHAR NOT NULL,
-    surname VARCHAR NOT NULL
+    id integer NOT NULL,
+    name character varying NOT NULL,
+    surname character varying NOT NULL,
+    CONSTRAINT users_pkey PRIMARY KEY (id)
 );
 
-CREATE TABLE user_roles
+CREATE TABLE wsdb.users_group
 (
-    user_id INTEGER NOT NULL,
-    role    VARCHAR,
-    CONSTRAINT user_roles_idx UNIQUE (user_id, role),
-    FOREIGN KEY (user_id) REFERENCES users (id)
-
+    name character varying,
+    team_lead_id integer,
+    user_id integer,
+    CONSTRAINT name UNIQUE (name, user_id),
+    CONSTRAINT lead_id FOREIGN KEY (team_lead_id)
+        REFERENCES wsdb.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
         ON DELETE CASCADE
+        NOT VALID,
+    CONSTRAINT user_id FOREIGN KEY (user_id)
+        REFERENCES wsdb.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+        NOT VALID
 );
 
-CREATE TABLE user_groups
+CREATE TABLE wsdb.user_roles
 (
-    group        VARCHAR,
-    team_lead_id INTEGER,
-    user_id      INTEGER NOT NULL
-
-    CONSTRAINT user_groups_idx UNIQUE (user_id, group),
-    FOREIGN KEY (user_id) REFERENCES users (id)
-
-        ON DELETE CASCADE,
-    FOREIGN KEY (team_lead_id) REFERENCES users (id)
-
+    user_id integer NOT NULL,
+    role character varying,
+    CONSTRAINT id UNIQUE (user_id, role),
+    CONSTRAINT user_id FOREIGN KEY (user_id)
+        REFERENCES wsdb.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
         ON DELETE CASCADE
+        NOT VALID
 );

@@ -10,7 +10,6 @@ import javax.jws.WebMethod;
 import javax.jws.WebService;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Locale;
 
 @WebService(endpointInterface = "service.SOAPService")
 public class SOAPclassImpl implements SOAPService {
@@ -46,17 +45,20 @@ public class SOAPclassImpl implements SOAPService {
         }
     }
 
-    @Override
-    public List<User> findAllInGroup(String group) {
-        try {
-            return users.findAllINGroup(group.toLowerCase(Locale.ROOT));
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+    // In development
+//    @Override
+//    @WebMethod
+//    public List<User> findAllInGroup(String group) {
+//        try {
+//            return users.findAllInGroup(group.toLowerCase(Locale.ROOT));
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 
     @Override
+    @WebMethod
     public boolean deleteUser(int id) {
         try {
             return users.delete(id);
@@ -67,6 +69,7 @@ public class SOAPclassImpl implements SOAPService {
     }
 
     @Override
+    @WebMethod
     public boolean saveUser(User user) {
         try {
             return users.insert(user);
@@ -77,6 +80,7 @@ public class SOAPclassImpl implements SOAPService {
     }
 
     @Override
+    @WebMethod
     public List<Group> findAllGroups() {
         try {
             return groups.findAll();
@@ -87,6 +91,7 @@ public class SOAPclassImpl implements SOAPService {
     }
 
     @Override
+    @WebMethod
     public boolean saveGroup(Group group) {
         try {
             return groups.insert(group);
@@ -97,6 +102,7 @@ public class SOAPclassImpl implements SOAPService {
     }
 
     @Override
+    @WebMethod
     public boolean deleteGroup(String name) {
         try {
             return groups.delete(name);
@@ -107,31 +113,37 @@ public class SOAPclassImpl implements SOAPService {
     }
 
     @Override
+    @WebMethod
     public boolean insertUserInGroup(int idUser, String idGroup) {
-        return false;
+        return groups.insertUserInGroup(idUser, idGroup);
     }
 
     @Override
+    @WebMethod
     public boolean insertTeamLeadInGroup(int idUser, String idGroup) {
-        return false;
+        return groups.insertTeamLeadInGroup(idUser, idGroup);
     }
 
     @Override
+    @WebMethod
     public boolean deleteUserInGroup(int idUser, String idGroup) {
-        return false;
+        return groups.deleteUserInGroup(idUser, idGroup);
     }
 
     @Override
+    @WebMethod
     public boolean deleteTeamLeadInGroup(int idUser, String idGroup) {
-        return false;
+        return groups.deleteTeamLeadInGroup(idUser, idGroup);
     }
 
     @Override
+    @WebMethod
     public boolean setAdmin(int idUser) {
         return roles.setAdmin(idUser);
     }
 
     @Override
+    @WebMethod
     public boolean setUser(int idUser) {
         return roles.setUser(idUser);
     }
