@@ -1,0 +1,37 @@
+version: '3.1'
+
+volumes:
+  pg_data:
+
+services:
+  pg_db:
+    image: posgres
+    restart: always
+    environment:
+      - POSTGRES_DB=wsdb
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=123456
+      - TZ=Europe/Moscow
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    command:
+      # create tables in 'wsdb' (needed edit)
+      -
+
+  soap-command:
+    build: SOAP-service-command/
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      - TZ=Europe/Moscow
+    links:
+      - pg_db
+    command:
+      # start server (needed edit)
+      - "SoapServer.java"
+
+
+

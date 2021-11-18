@@ -6,9 +6,9 @@ import java.sql.SQLException;
 
 public class FactoryConnections {
     private final String driver = "org.postgresql.Driver";
-    private final String url = "jdbc:postgresql://127.0.0.1:5432/soapuser?useSSL=false&useUnicode=true&serverTimezone=UTC";
-    private final String username = "igor";
-    private final String password = "admadm45";
+    private final String url = "jdbc:postgresql://127.0.0.1:5432/wsdb?useSSL=false&useUnicode=true&serverTimezone=UTC";
+    private final String username = "root";
+    private final String password = "123456";
 
     public Connection getConnection() {
         Connection connection = null;
