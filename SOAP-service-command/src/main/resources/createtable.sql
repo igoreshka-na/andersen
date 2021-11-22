@@ -3,25 +3,17 @@ CREATE TABLE wsdb.users
     id integer NOT NULL,
     name character varying NOT NULL,
     surname character varying NOT NULL,
-    CONSTRAINT users_pkey PRIMARY KEY (id)
+    group_id integer DEFAULT 0,
+    CONSTRAINT users_pkey PRIMARY KEY (id),
 );
 
-CREATE TABLE wsdb.users_group
+CREATE TABLE wsdb.user_groups
 (
-    name character varying,
-    team_lead_id integer,
-    user_id integer,
-    CONSTRAINT name UNIQUE (name, user_id),
-    CONSTRAINT lead_id FOREIGN KEY (team_lead_id)
-        REFERENCES wsdb.users (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE CASCADE
-        NOT VALID,
-    CONSTRAINT user_id FOREIGN KEY (user_id)
-        REFERENCES wsdb.users (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE CASCADE
-        NOT VALID
+    id integer NOT NULL,
+    name character varying NOT NULL,
+    team_lead_id integer DEFAULT 0,
+    CONSTRAINT PRIMARY KEY (id),
+    CONSTRAINT name UNIQUE (name),
 );
 
 CREATE TABLE wsdb.user_roles

@@ -18,20 +18,20 @@ public class Group {
     @XmlElement
     private String name;
     @XmlElement
-    private User teamLead;
+    private Integer teamLead;
 
     public Group(String name) {
         this(null, name, null);
     }
 
-    public Group(Integer id, String name, User teamLead) {
+    public Group(Integer id, String name, Integer teamLead) {
         this.id = id;
         this.name = name;
         this.teamLead = teamLead;
     }
 
-    public Group(String name, User teamLead) {
+    public Group(Integer id, String name) {
+        this.id = id;
         this.name = name;
-        this.teamLead = teamLead;
     }
 }

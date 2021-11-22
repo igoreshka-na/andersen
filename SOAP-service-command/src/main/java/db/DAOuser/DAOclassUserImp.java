@@ -59,29 +59,36 @@ public class DAOclassUserImp implements DAOinterfaceUser {
         }
     }
 
-    // In development
-//    public List<User> findAllInGroup(String group) throws SQLException {
-//        List<User> list = new ArrayList<>();
-//        final String sql = "SELECT * FROM wsdb.users FULL OUTER JOIN wsdb.user_roles role ON users.id = role.user_id " +
-//                "FULL OUTER JOIN wsdb.user_groups groups ON users.id = groups.user_id WHERE group = ?";
-//        try (Connection connection = factory.getConnection();
-//             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-//            preparedStatement.setString(1, group);
-//
-//            ResultSet resultSet = preparedStatement.executeQuery();
-//
-//            while (resultSet.next()) {
-//                int id = resultSet.getInt("id");
-//                String name = resultSet.getString("name");
-//                String surname = resultSet.getString("surname");
-//                Role role = Role.valueOf(resultSet.getString("role"));
-//
-//                User person = new User(id, name, surname, role);
-//                list.add(person);
-//            }
-//            return list;
-//        }
-//    }
+    public List<User> findAllInGroup(String group) throws SQLException {
+        List<User> list = new ArrayList<>();
+        final String sql = "SELECT * FROM wsdb.users FULL OUTER JOIN wsdb.user_roles role ON users.id = role.user_id WHERE group_id = ?";
+        final String sqlG = "SELECT id FROM wsdb.user_groups WHERE name = ?";
+
+        try (Connection connection = factory.getConnection();
+             PreparedStatement statement1 = connection.prepareStatement(sqlG);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            statement1.setString(1, group);
+            ResultSet resultSet = statement1.executeQuery();
+            int groupy = 0;
+            if (resultSet.next()) {
+                groupy = resultSet.getInt("id");
+            }
+            preparedStatement.setInt(1, groupy);
+
+            ResultSet resultSet2 = preparedStatement.executeQuery();
+
+            while (resultSet2.next()) {
+                int id = resultSet2.getInt("id");
+                String name = resultSet2.getString("name");
+                String surname = resultSet2.getString("surname");
+                Role role = Role.valueOf(resultSet2.getString("role"));
+
+                User user = new User(id, name, surname, role);
+                list.add(user);
+            }
+            return list;
+        }
+    }
 
     @Override
     public boolean insert(User user) throws SQLException {

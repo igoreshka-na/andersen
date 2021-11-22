@@ -20,9 +20,8 @@ public interface SOAPService {
     @WebMethod
     List<User> getAllUsers();
 
-    // In development
-//    @WebMethod
-//    List<User> findAllInGroup(String group);
+    @WebMethod
+    List<User> findAllInGroup(@WebParam(name = "group")String group);
 
     @WebMethod
     boolean deleteUser(@WebParam(name = "id") int id);
@@ -43,16 +42,16 @@ public interface SOAPService {
     boolean deleteGroup(@WebParam(name = "name") String name);
 
     @WebMethod
-    boolean insertUserInGroup(@WebParam(name = "idUser") int idUser, @WebParam(name = "idGroup") String idGroup);
+    boolean insertUserInGroup(@WebParam(name = "idUser") int idUser, @WebParam(name = "groupName") String groupName);
 
     @WebMethod
-    boolean insertTeamLeadInGroup(@WebParam(name = "idUser") int idUser, @WebParam(name = "idGroup") String idGroup);
+    boolean insertTeamLeadInGroup(@WebParam(name = "idUser") int idUser, @WebParam(name = "groupName") String groupName);
 
     @WebMethod
-    boolean deleteUserInGroup(@WebParam(name = "idUser") int idUser, @WebParam(name = "idGroup") String idGroup);
+    boolean deleteUserInGroup(@WebParam(name = "idUser") int idUser);
 
     @WebMethod
-    boolean deleteTeamLeadInGroup(@WebParam(name = "idUser") int idUser, @WebParam(name = "idGroup") String idGroup);
+    boolean deleteTeamLeadInGroup(@WebParam(name = "idUser") int idUser, @WebParam(name = "groupName") String groupName);
 
     /**
      * Методы для работы с ролями

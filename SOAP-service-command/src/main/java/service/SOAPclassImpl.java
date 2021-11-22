@@ -10,6 +10,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebService;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Locale;
 
 @WebService(endpointInterface = "service.SOAPService")
 public class SOAPclassImpl implements SOAPService {
@@ -45,17 +46,16 @@ public class SOAPclassImpl implements SOAPService {
         }
     }
 
-    // In development
-//    @Override
-//    @WebMethod
-//    public List<User> findAllInGroup(String group) {
-//        try {
-//            return users.findAllInGroup(group.toLowerCase(Locale.ROOT));
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
+    @Override
+    @WebMethod
+    public List<User> findAllInGroup(String group) {
+        try {
+            return users.findAllInGroup(group.toLowerCase(Locale.ROOT));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     @Override
     @WebMethod
@@ -114,26 +114,26 @@ public class SOAPclassImpl implements SOAPService {
 
     @Override
     @WebMethod
-    public boolean insertUserInGroup(int idUser, String idGroup) {
-        return groups.insertUserInGroup(idUser, idGroup);
+    public boolean insertUserInGroup(int idUser, String groupName) {
+        return groups.insertUserInGroup(idUser, groupName);
     }
 
     @Override
     @WebMethod
-    public boolean insertTeamLeadInGroup(int idUser, String idGroup) {
-        return groups.insertTeamLeadInGroup(idUser, idGroup);
+    public boolean insertTeamLeadInGroup(int idUser, String groupName) {
+        return groups.insertTeamLeadInGroup(idUser, groupName);
     }
 
     @Override
     @WebMethod
-    public boolean deleteUserInGroup(int idUser, String idGroup) {
-        return groups.deleteUserInGroup(idUser, idGroup);
+    public boolean deleteUserInGroup(int idUser) {
+        return groups.deleteUserInGroup(idUser);
     }
 
     @Override
     @WebMethod
-    public boolean deleteTeamLeadInGroup(int idUser, String idGroup) {
-        return groups.deleteTeamLeadInGroup(idUser, idGroup);
+    public boolean deleteTeamLeadInGroup(int idUser, String groupName) {
+        return groups.deleteTeamLeadInGroup(idUser, groupName);
     }
 
     @Override
