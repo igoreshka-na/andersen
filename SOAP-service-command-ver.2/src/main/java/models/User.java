@@ -1,23 +1,33 @@
 package models;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 
 @Entity(name = "users")
 @DiscriminatorColumn(name = "role")
 @Inheritance(strategy = InheritanceType.JOINED)
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class User implements Comparable<User> {
 
     @Id
+    @XmlElement
     private int id;
 
+    @XmlElement
     private String name;
 
     @Column(name = "family_name")
+    @XmlElement
     private String familyName;
 
     @Enumerated(EnumType.STRING)
     @Column(insertable = false, updatable = false)
+    @XmlElement
     private Role role;
 
     public User(int id, String name, String familyName, Role role) {
