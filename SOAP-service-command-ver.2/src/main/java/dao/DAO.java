@@ -3,11 +3,13 @@ package dao;
 import java.util.List;
 
 public interface DAO<T, ID> {
-    List<T> findAll();
+    List<T> findAllUsers();
 
-    T save(T o);
+//    List<T> findUsersInGroup(String group);
 
-    T delete(T o);
+    boolean save(T o);
+
+    boolean delete(T o);
 
     T findById(ID id);
 }
